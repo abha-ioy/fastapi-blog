@@ -1,0 +1,23 @@
+{% extends "layouts/blank.html" %}
+
+{% block content %}
+<div class="flex flex-col gap-4 p-2">
+  <h2 class="text-xl font-semibold">{{ page_title }}</h2>
+{% for post in posts %}
+  <div class="border-2 rounded-md p-4">
+    <div class="flex gap-3 items-baseline">
+      <a href={{ url_for("post", post_id=post.id)}} class="font-bold text-neutral-500 text-2xl hover:underline hover:text-neutral-800 cursor-pointer">{{ post.title }}</a>
+        <a href="" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">{{ post.author.username }}</a>
+        <p class="text-sm font-light text-neutral-500">{{ post.date_posted.strftime("%B %d, %Y") }}</p>
+    </div>
+
+    <div class="py-2">
+      <p class="font-light">{{ post.content }}</p>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+

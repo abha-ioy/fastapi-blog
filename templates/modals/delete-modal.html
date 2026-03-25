@@ -1,0 +1,45 @@
+<div x-data="{
+        async deletePost() { // Defined as an object method
+            try {
+                const response = await fetch(`/api/posts/${postId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    // Success logic here (e.g., redirect or close modal)
+                    window.location.href = '/'; 
+                }
+            } catch(error) {
+                console.log(error);
+            }
+        }
+    }" 
+    x-show="deleteModal" 
+    class="fixed inset-0 z-50 flex items-center justify-center p-4" 
+    x-cloak
+>
+    <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm" @click="deleteModal = false"></div>
+
+    <div class="relative w-full max-w-md p-6 bg-white rounded-md border-2 border-gray-900 shadow-lg">
+        <h2 class="text-xl font-bold uppercase tracking-tight text-gray-900">Confirm Delete</h2>
+        <p class="mt-4 text-gray-700">
+            Are you sure you want to delete <span class="font-bold underline" x-text="postTitleToDelete"></span>?
+        </p>
+
+        <div class="flex justify-end gap-3 mt-8">
+            <button 
+                @click="deleteModal = false" 
+                class="rounded-md px-4 py-2 border-2 border-gray-200 hover:bg-gray-100 hover:cursor-pointer transition-colors"
+            >
+                Go Back
+            </button>
+            
+            <input
+                @click="deletePost()"
+                type="button" 
+                class="rounded-md px-4 py-2 bg-red-600 text-white border-2 border-red-700 hover:bg-red-700 hover:cursor-pointer transition-colors"
+                value="Delete Forever"
+            />
+        </div>
+    </div>
+</div>

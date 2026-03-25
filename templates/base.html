@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      {% if title %}
+        FastAPI BLOG - {{ title }}
+      {% else %}
+        FastAPI BLOG
+      {% endif %}
+    </title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", path="css/styles.css")}}">
+  </head>
+  <body class="flex flex-col min-h-screen" x-data="{ 
+	  deleteModal: false,
+	  submitPostForm: false, 
+	  editPostForm: false,
+	  successModal: false, 
+	  errorModal: false, 
+	  modalMessage: '' 
+	}">
+	{% if title %}
+    {% include "includes/header.html" %}
+	{% endif %}
+    {% block layout %}
+    {% endblock %}
+
+    {% include "modals/create-post.html" %}
+    {% include "modals/post-feedback.html" %}
+    <script type="module">
+	import { getErrorMessage } from "/static/js/utils.js"
+		
+    </script>
+  </body>
+</html>

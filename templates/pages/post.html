@@ -1,0 +1,27 @@
+{% extends "layouts/blank.html" %}
+{% block content %}
+<div x-data="{ postId: {{ post.id }}, postTitleToDelete: '{{ post.title }}' }" class="flex flex-col border-2 rounded-xl p-6 bg-white">
+  <div class="flex gap-3 items-baseline">
+    <p class="font-bold text-neutral-800 text-2xl hover:underline cursor-pointer">{{ title }}</p>
+    <a href={{ url_for("user_posts", user_id=post.author.id)}} class="text-sm text-blue-600 hover:text-blue-800 transition-colors">{{ post.author.username }}</a>
+    <p class="text-sm font-light text-neutral-500">{{ post.date_posted.strftime("%B %d, %Y") }}</p>
+  </div>
+
+  <div class="py-4">
+    <p class="text-lg text-neutral-600 leading-relaxed">{{ post.content }}</p>
+  </div>
+
+{% if post.author.id == 1 %}
+  <div class="flex gap-3 mt-2">
+    <button @click="editPostForm = !editPostForm" class="px-5 py-2 bg-black text-white text-sm font-semibold rounded-lg hover:bg-neutral-800 transition-colors">
+      Edit
+    </button>
+    <button @click="deleteModal = !deleteModal" class="px-5 py-2 text-red-500 border border-red-200 text-sm font-semibold rounded-lg hover:bg-red-50 hover:border-red-400 transition-all">
+      Delete
+    </button>
+  </div>
+{% endif %}
+{% include "modals/edit-post.html" %}
+{% include "modals/delete-modal.html" %}
+</div>
+{% endblock %}

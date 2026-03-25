@@ -1,0 +1,72 @@
+<div 
+  x-show="editPostForm" 
+  class="fixed inset-0 z-50 flex justify-center items-start overflow-y-auto bg-gray-900/50 backdrop-blur-md"
+  style="display: none;"
+  x-cloak
+>
+  <div 
+    x-on:click.away="editPostForm = false"
+    class="relative w-full max-w-[500px] mt-20 mb-6 bg-white rounded-xl shadow-2xl p-6 mx-4"
+  >
+    <form @submit.prevent="
+    const formData = new FormData($el);
+    const postData = Object.fromEntries(formData.entries());
+    postData.user_id = 1;
+	
+    try {
+    const response = await fetch(`/api/posts/${postId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            editPostForm = false; // Works perfectly here!
+            window.dispatchEvent(new CustomEvent('post-results', { 
+                detail: { status: 'success', title: data.title } 
+            }));
+        } else {
+            const errorData = await response.json();
+            window.dispatchEvent(new CustomEvent('post-results', { 
+                detail: { status: 'error', message: errorData.detail || 'Error' } 
+            }));
+        }
+    } catch (err) {
+        window.dispatchEvent(new CustomEvent('post-results', { 
+            detail: { status: 'error', message: 'Network error' } 
+        }));
+    }" id="createPostForm" class="w-full">
+      <h2 class="text-xl font-bold mb-4">Create New Post</h2>
+      
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col">
+	  <!-- <input type="hidden" name="post_id" id="{{ post.id }}"/> -->
+          <label class="text-sm font-medium text-gray-700">Title</label>
+	  <input id="title" name="title" placeholder="Enter title..." class="p-2 border rounded-md focus:ring-2 focus:ring-black outline-none transition-all" value="{{ post.title }}" required/>
+        </div>
+        
+        <div class="flex flex-col">
+          <label class="text-sm font-medium text-gray-700">Content</label>
+	  <textarea id="content" name="content" placeholder="What's on your mind?" class="p-2 border rounded-md focus:ring-2 focus:ring-black outline-none h-32 transition-all" rows="5" required>{{ post.content }}</textarea>
+        </div>
+
+        <div class="flex gap-3 justify-end mt-4">
+          <button 
+            @click="editPostForm = false" 
+            type="button" 
+            class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="px-6 py-2 bg-black text-white font-semibold rounded-lg hover:bg-neutral-800 transition-colors"
+          >
+            Post
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<header class="flex justify-evenly p-4">
+  <div class="flex items-center flex gap-5">
+    <div class="text-2xl font-extrabold">
+      <p>FastAPI BLOG</p>
+    </div>
+    <div>
+      <a href={{ url_for("home") }} class="hover:underline">Home</a>
+    </div>
+  </div>
+  <div class="flex gap-2 justify-center items-center">
+    <div>
+      <a x-on:click="submitPostForm = !submitPostForm" class="btn hover:underline">New Post</a>
+    </div>
+	
+    <div class="">
+		<a href="{{ url_for("login")}}" class="btn border border-2">Login</a>
+
+    </div>
+    <div>
+		<a href="{{ url_for("register")}}" class="btn bg-black text-white ">Sign Up</a>
+    </div>
+  </div>
+</header>
