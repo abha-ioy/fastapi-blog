@@ -8,7 +8,6 @@ from fastapi.exception_handlers import (
 )
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -18,6 +17,7 @@ from sqlalchemy.orm import selectinload
 import models
 from database import Base, engine, get_db
 from routers import users, posts
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     async with engine.begin() as conn:
@@ -57,7 +57,7 @@ async def post_page(request: Request, post_id: int, db: Annotated[AsyncSession, 
 @app.get("/users/{user_id}/posts", name="user_posts",  include_in_schema=False)
 async def user_posts_page(request: Request, user_id: int, db: Annotated[AsyncSession, Depends(get_db)]):
     print(user_id)
-    result = await db.execute(select(models.User).where(models.User.id == user_id).order_by(models.Post.date_posted.desc()))
+    result = await db.execute(select(models.User).where(models.User.id == user_id))
     user = result.scalars().first()
         
     if not user:
@@ -66,7 +66,7 @@ async def user_posts_page(request: Request, user_id: int, db: Annotated[AsyncSes
                 detail="User not found",
         )
 
-    result = await db.execute(select(models.Post).options(selectinload(models.Post.author)).where(models.Post.user_id == user_id))
+    result = await db.execute(select(models.Post).options(selectinload(models.Post.author)).where(models.Post.user_id == user_id).order_by(models.Post.date_posted.desc()))
     posts = result.scalars().all()
     return templates.TemplateResponse(
             request, "pages/user_posts.html", 

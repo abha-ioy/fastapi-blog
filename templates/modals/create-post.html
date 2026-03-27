@@ -11,8 +11,7 @@
     <form @submit.prevent="
     const formData = new FormData($el);
     const postData = Object.fromEntries(formData.entries());
-    postData.user_id = 1;
-
+    postData.user_id = 1;  
     try {
         const response = await fetch('/api/posts', {
             method: 'POST',
