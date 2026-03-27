@@ -1,23 +1,46 @@
 {% extends "layouts/blank.html" %}
 
 {% block content %}
-<div class="flex flex-col gap-4 p-2">
-  <h2 class="text-xl font-semibold">{{ page_title }}</h2>
-{% for post in posts %}
-  <div class="border-2 rounded-md p-4">
-    <div class="flex gap-3 items-baseline">
-      <a href={{ url_for("post", post_id=post.id)}} class="font-bold text-neutral-500 text-2xl hover:underline hover:text-neutral-800 cursor-pointer">{{ post.title }}</a>
-        <a href="" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">{{ post.author.username }}</a>
-        <p class="text-sm font-light text-neutral-500">{{ post.date_posted.strftime("%B %d, %Y") }}</p>
+<div class="max-w-4xl mx-auto flex flex-col gap-6 p-6">
+  
+  <h2 class="text-3xl font-bold text-neutral-900 tracking-tight border-b pb-4">
+    {{ page_title }}
+  </h2>
+
+  {% for post in posts %}
+  <div class="bg-white border border-neutral-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+    
+    <div class="flex flex-col md:flex-row md:items-baseline gap-2 mb-3">
+      <a href="{{ url_for('post', post_id=post.id) }}" 
+         class="font-extrabold text-neutral-800 text-2xl hover:text-blue-600 transition-colors cursor-pointer">
+         {{ post.title }}
+      </a>
+      
+      <div class="flex items-center gap-2">
+        <span class="hidden md:inline text-neutral-300">•</span>
+        <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+          @{{ post.author.username }}
+        </a>
+        <span class="text-neutral-300">•</span>
+        <p class="text-sm font-medium text-neutral-500">
+          {{ post.date_posted.strftime("%B %d, %Y") }}
+        </p>
+      </div>
     </div>
 
     <div class="py-2">
-      <p class="font-light">{{ post.content }}</p>
+      <p class="text-neutral-600 leading-relaxed line-clamp-3">
+        {{ post.content }}
+      </p>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('post', post_id=post.id) }}" class="text-sm font-bold text-blue-600 hover:text-blue-700">
+            View full post →
+        </a>
     </div>
   </div>
-{% endfor %}
+  {% endfor %}
+
 </div>
 {% endblock %}
-
-
-
