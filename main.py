@@ -49,8 +49,8 @@ async def post_page(request: Request, post_id: int, db: Annotated[AsyncSession, 
     result = await db.execute(select(models.Post).options(selectinload(models.Post.author)).where(models.Post.id == post_id))
     post = result.scalars().first()
     if post:
-        title = post.title[:50]
-        return templates.TemplateResponse(request, "pages/post.html", {"post": post, "title": title})
+        post_title = post.title[:50]
+        return templates.TemplateResponse(request, "pages/post.html", {"post": post, "title": post_title})
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
 
 

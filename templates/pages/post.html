@@ -1,44 +1,60 @@
 {% extends "layouts/blank.html" %}
+
 {% block content %}
-<div x-data="{ 
-        user: null,
+<div class="max-w-4xl mx-auto my-8 px-4"
+     x-data="{ 
+        user: null, 
         postId: {{ post.id }}, 
-        postTitleToDelete: '{{ post.title }}', 
-        userId: {{ post.user_id }} }"
-        x-init="
-            if (window.getCurrentUser) {
-                user = await getCurrentUser();
+        postTitleToDelete: '{{ post.title | escape }}', 
+        userId: {{ post.user_id }},
+        editPostForm: false,
+        deleteModal: false 
+     }"
+     x-init="user = window.getCurrentUser ? await getCurrentUser() : null; 
+             window.addEventListener('auth-ready', async () => { user = await getCurrentUser(); });">
 
-            } else {
-                window.addEventListener('auth-ready', async () => {
-                    user = await getCurrentUser();
-                });
-            }
-        " 
-    class="flex flex-col rounded-xl p-6 bg-white">
-  <div class="flex gap-3 items-baseline">
-    <p class="font-bold text-neutral-800 text-2xl hover:underline cursor-pointer">{{ title }}</p>
-    <a href={{ url_for("user_posts", user_id=post.author.id)}} class="text-sm text-blue-600 hover:text-blue-800 transition-colors">{{ post.author.username }}</a>
-    <p class="text-sm font-light text-neutral-500">{{ post.date_posted.strftime("%B %d, %Y") }}</p>
-  </div>
+    <article class="flex flex-col rounded-2xl p-8 bg-white shadow-sm border border-neutral-100">
+        
+        <header class="mb-6">
+            <h1 class="font-extrabold text-neutral-900 text-3xl md:text-4xl tracking-tight mb-3">
+                {{ post.title }}
+            </h1>
+            
+            <div class="flex items-center gap-3 text-sm">
+                <a href="{{ url_for('user_posts', user_id=post.author.id) }}" 
+                   class="font-medium text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition-colors">
+                   @{{ post.author.username }}
+                </a>
+                <span class="text-neutral-300">•</span>
+                <time class="text-neutral-500 font-medium">
+                    {{ post.date_posted.strftime("%B %d, %Y") }}
+                </time>
+            </div>
+        </header>
 
-  <div class="py-4">
-    <p class="text-lg text-neutral-600 leading-relaxed">{{ post.content }}</p>
-  </div>
+        <div class="prose prose-neutral max-w-none">
+            <p class="text-lg text-neutral-700 leading-relaxed whitespace-pre-line">
+                {{ post.content }}
+            </p>
+        </div>
 
-{% if post.author.id == 1 %}
-  <template x-if="user && user.id == userId">
-      <div class="flex gap-3 mt-2">
-        <button @click="editPostForm = !editPostForm" class="px-5 py-2 bg-black text-white text-sm font-semibold rounded-lg hover:bg-neutral-800 transition-colors">
-          Edit
-        </button>
-        <button @click="deleteModal = !deleteModal" class="px-5 py-2 text-red-500 border border-red-200 text-sm font-semibold rounded-lg hover:bg-red-50 hover:border-red-400 transition-all">
-          Delete
-        </button>
-      </div>
-  </template>
-{% endif %}
-{% include "modals/edit-post.html" %}
-{% include "modals/delete-modal.html" %}
+        <template x-if="user && user.id === userId">
+            <div class="flex items-center gap-3 mt-8 pt-6 border-t border-neutral-100">
+                <button @click="editPostForm = true" 
+                        class="inline-flex items-center px-6 py-2.5 bg-neutral-900 text-white text-sm font-bold rounded-xl hover:bg-neutral-700 transform active:scale-95 transition-all">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    Edit Post
+                </button>
+                
+                <button @click="deleteModal = true" 
+                        class="inline-flex items-center px-6 py-2.5 text-red-600 bg-red-50 text-sm font-bold rounded-xl hover:bg-red-100 transform active:scale-95 transition-all">
+                    Delete
+                </button>
+            </div>
+        </template>
+    </article>
+
+    {% include "modals/edit-post.html" %}
+    {% include "modals/delete-modal.html" %}
 </div>
 {% endblock %}
