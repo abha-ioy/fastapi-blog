@@ -17,6 +17,7 @@ from sqlalchemy.orm import selectinload
 import models
 from database import Base, engine, get_db
 from routers import users, posts
+from auth import CurrentUser
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -93,6 +94,16 @@ async def register_page(request: Request):
         "pages/register.html",
         {"title": "Sign Up"},
     )
+
+@app.get("/account", include_in_schema=False, name="account_page")
+async def account_page(request: Request, current_user: CurrentUser):
+    
+    return templates.TemplateResponse(
+        request,
+        "pages/account_page.html",
+        {"user": current_user, "title": "Account"},
+    )
+
 
 @app.exception_handler(StarletteHTTPException)
 async def general_http_exception_handler(request: Request, exception: StarletteHTTPException):

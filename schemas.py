@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing_extensions import FrozenSet
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 class UserBase(BaseModel):
@@ -33,7 +32,7 @@ class PostBase(BaseModel):
     content: str = Field(min_length=1)
 
 class PostCreate(PostBase):
-    user_id: int
+    pass
 
 class PostUpdate(PostBase):
     title: str | None = Field(default=None, min_length=1, max_length=100)
