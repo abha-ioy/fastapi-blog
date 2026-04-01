@@ -96,12 +96,12 @@ async def register_page(request: Request):
     )
 
 @app.get("/account", include_in_schema=False, name="account_page")
-async def account_page(request: Request, current_user: CurrentUser):
+async def account_page(request: Request):
     
     return templates.TemplateResponse(
         request,
         "pages/account_page.html",
-        {"user": current_user, "title": "Account"},
+        {"title": "Your Account"},
     )
 
 
@@ -123,8 +123,10 @@ async def general_http_exception_handler(request: Request, exception: StarletteH
                 "title": exception.status_code,
                 "message": message,
             },
+
             status_code=exception.status_code,
     )
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exception: RequestValidationError):

@@ -1,7 +1,5 @@
 from datetime import UTC, datetime, timedelta
-
 import jwt
-
 from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
 from config import settings
@@ -48,7 +46,7 @@ def verify_access_token(token: str) -> str | None:
     except jwt.InvalidTokenError:
          return None
     return payload.get("sub")
-
+    
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Annotated[AsyncSession, Depends(get_db)],) -> models.User:
     user_id = verify_access_token(token)
 

@@ -11,11 +11,17 @@
     <form @submit.prevent="
     const formData = new FormData($el);
     const postData = Object.fromEntries(formData.entries());
-    postData.user_id = 1;  
+    const token = getToken();
+    
+    if (!token) {
+        window.location.href = '/login';
+        return
+    }
+
     try {
         const response = await fetch('/api/posts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(postData)
         });
 

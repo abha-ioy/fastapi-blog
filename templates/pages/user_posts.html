@@ -2,7 +2,11 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto flex flex-col gap-6 p-6">
-  
+  <div class="w-16 h-16 flex-shrink-0 bg-neutral-100 rounded-full overflow-hidden border border-neutral-50">
+      {% if posts %}
+          <img src="{{ posts[0].author.image_path }}" class="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500" />
+      {% endif %}
+  </div> 
   <h2 class="text-3xl font-bold text-neutral-900 tracking-tight border-b pb-4">
     {{ page_title }}
   </h2>

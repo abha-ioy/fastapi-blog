@@ -18,6 +18,7 @@
 	  deleteModal: false,
 	  submitPostForm: false, 
 	  editPostForm: false,
+      editProfileForm: false,
 	  successModal: false, 
 	  errorModal: false, 
 	  modalMessage: '' 
@@ -32,13 +33,14 @@
 
     <script type="module">
 
-        import { getCurrentUser, logout, setToken } from "/static/js/auth.js";
+        import { getCurrentUser, logout, setToken, getToken } from "/static/js/auth.js";
 
         window.getCurrentUser = getCurrentUser;
         window.logout = logout;
         window.setToken = setToken;
-        
+        window.getToken = getToken; 
         window.dispatchEvent(new CustomEvent('auth-ready'));
+
     </script>
 
     {% block javascript %}{% endblock %}		

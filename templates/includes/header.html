@@ -1,7 +1,8 @@
-<header class="flex justify-evenly p-4" 
+<header class="fixed top-0 left-0 w-full z-50 flex justify-evenly p-4 bg-white border-b border-gray-100" 
         x-data="{ user: null, loading: true, pageTitle: '{{ title }}' }" 
         @auth-ready.window="user = await getCurrentUser(); loading = false;"
         x-init="if (window.getCurrentUser) { user = await getCurrentUser(); loading = false; }">
+  
   <div class="flex items-center gap-5">
     <div class="text-2xl font-extrabold">
       <p>FastAPI BLOG</p>
@@ -12,15 +13,12 @@
   </div>
 
   <div class="flex gap-4 justify-center items-center">
-    
     <template x-if="user">
       <div class="flex gap-4 items-center font-semibold">
         <a x-on:click="submitPostForm = !submitPostForm" class="btn border border-2 hover:underline cursor-pointer">
           New Post
         </a>
-        <button 
-          @click="logout()" 
-          class="btn border-2 border-red-500 text-red-500 hover:bg-red-50 px-3 py-1 rounded">
+        <button @click="logout()" class="btn border-2 border-red-500 text-red-500 hover:bg-red-50 px-3 py-1 rounded">
           Logout
         </button>
       </div>
@@ -28,18 +26,23 @@
 
     <template x-if="pageTitle != 'Login' && pageTitle != 'Sign Up' && !user && !loading">
       <div class="flex gap-2 items-center">
-        <div>
-          <a href="{{ url_for('login') }}" class="btn border border-2 px-4 py-1">Login</a>
-        </div>
-        <div>
-          <a href="{{ url_for('register') }}" class="btn bg-black text-white px-4 py-1">Sign Up</a>
-        </div>
+        <a href="{{ url_for('login') }}" class="btn border border-2 px-4 py-1">Login</a>
+        <a href="{{ url_for('register') }}" class="btn bg-black text-white px-4 py-1">Sign Up</a>
       </div>
+    </template>
+    <template x-if="user">
+        <div class="flex gap-2 items-center">
+            <div class="w-12 h-12 flex-shrink-0 bg-neutral-100 rounded-full overflow-hidden border border-neutral-50">
+                <img :src="user.image_path" class=""/>
+            </div>
+            <a href="{{ url_for("account_page") }}" class="font-semibold">My account</a>
+        </div>
     </template>
 
     <template x-if="loading">
       <div class="animate-pulse text-gray-400 text-sm">Verifying...</div>
     </template>
-
   </div>
 </header>
+
+<div class="h-16"></div>
